@@ -1,0 +1,2 @@
+Prefix plugins/MannWhitney/example
+Plugin MannWhitney inputfile parameters.mannwhitney1.txt outputfile mw.txt
