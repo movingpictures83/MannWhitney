@@ -9,19 +9,24 @@
 
 
 from scipy.stats import mannwhitneyu
+#from scipy.stats import false_discovery_control
 import pandas as pd
 import PyPluMA
 
 def test_sp(all_species, df1, df2):
     significant_species=[]
+    ps = []
     for species in all_species:
         try:
             stat, p = mannwhitneyu(list(df1[species]), list(df2[species]))
+            ps.append(p)
         except ValueError:
             continue # when all numbers are identical
         if p<0.05:
-            #print(species, p)
+            print(species, stat, p*2)
             significant_species.append(species.replace(' ','.').replace('(','X.').replace(')','.').replace('-', '.'))
+    print(ps)
+    print(false_discovery_control(ps))
     return significant_species
 
 class MannWhitneyPlugin:
@@ -38,9 +43,10 @@ class MannWhitneyPlugin:
        group1 = self.params['group1']
        group2 = self.params['group2']
        self.all_species = list(df.columns)
-       self.all_species.pop(0)
+       #self.all_species.pop(0)
        self.all_species.pop(0)
 
+       print(df)
        self.df1 = df[df['Group']==group1]
        self.df2 = df[df['Group']==group2]
        #df_control = df[df['Group']=='Control']
